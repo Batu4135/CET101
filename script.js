@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ====================
   // VERİLER
   // ====================
-  const targetSentence = "Dijital davranış düşündüğümüzden daha fazlasını ortaya koyar.";
+  const targetSentence = "Bu, son derece başarılı bir sunum çalışmasıdır.";
   const sliderTarget = Math.floor(Math.random() * 61) + 20; // 20-80 arası rastgele hedef
 
   let keystrokes = [];
