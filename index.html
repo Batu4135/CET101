@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Digital Exhaust Deneyi</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
@@ -13,14 +13,13 @@
   <header>
     <h1>Digital Exhaust</h1>
     <p class="subtitle">CET 101</p>
-    
   </header>
 
   <section class="task" id="task-typing">
     <h2>1️⃣ Yazma Ritmi</h2>
     <p>Aşağıdaki cümleyi <b>eksiksiz ve doğru</b> yazın:</p>
     <p class="target-sentence no-copy" id="typingSentence"></p>
-    <input type="text" id="typingInput" placeholder="Buraya yazın...">
+    <input type="text" id="typingInput" placeholder="Buraya yazın..." />
     <button id="checkTyping">Kontrol Et</button>
     <p id="typingStatus" class="status-line"></p>
   </section>
@@ -37,25 +36,25 @@
 
   <section class="task" id="task-reaction">
     <h2>3️⃣ Reaksiyon Testi</h2>
-    <p>Butona basarak denemeyi başlatın, "Şimdi tıkla!" mesajını görünce <b>hemen tıklayın</b>.</p>
+    <p>"Şimdi tıkla!" yazısını görünce hemen tıklayın.</p>
     <button id="reactionBtn">Denemeyi Başlat</button>
-    <p id="reactionStatus" class="status-line">Hazır olduğunuzda butona basın.</p>
+    <p id="reactionStatus" class="status-line"></p>
   </section>
 
   <section class="task" id="task-slider">
     <h2>4️⃣ Hassas Sürgü (2 sn)</h2>
-    <p>Sadece <b>2 saniyen</b> var! Sürgüyü <b id="sliderTarget">—</b> değerine (0-100) getir.</p>
+    <p>Yalnızca <b>2 saniyen</b> var! Hedef: <b id="sliderTarget">—</b></p>
     <p class="status-line">Süre: <span id="sliderCountdown">Hazır mısın?</span></p>
-    <input type="range" id="precisionSlider" min="0" max="100" step="0.5" value="50" disabled>
-    <p class="status-line">Seçilen değer: <span id="sliderValue">50</span></p>
-    <button id="startSliderGame">Denemeyi Başlat</button>
+    <input type="range" id="precisionSlider" min="0" max="100" step="0.5" value="0" disabled />
+    <p>Seçilen: <span id="sliderValue">0</span></p>
+    <button id="startSliderGame">Başlat</button>
     <p id="sliderFeedback" class="status-line"></p>
   </section>
 
   <section class="task" id="task-quiz">
     <h2>5️⃣ Bilgi Sorusu</h2>
-    <p>Bu sayıların toplamı kaç eder? <b>12 + 7 + 5</b></p>
-    <input type="number" id="quizAnswer" placeholder="Cevabınızı yazın" step="1">
+    <p>12 + 7 + 5 = ?</p>
+    <input type="number" id="quizAnswer" />
     <button id="submitQuiz">Cevabı Kaydet</button>
     <p id="quizStatus" class="status-line"></p>
   </section>
@@ -69,7 +68,7 @@
 
   <section id="classification" class="hidden">
     <h2>🧠 Digital Exhaust mı?</h2>
-    <p>Her veri için sence doğru kategori hangisi? Otomatik dijital iz mi yoksa açık görev sonucu mu?</p>
+    <p>Her veri için doğru kategori hangisi? Otomatik dijital iz mi yoksa açık görev sonucu mu?</p>
     <div id="classificationList" class="classification-list"></div>
     <button id="evaluateClassification" class="finish">Seçimi Gönder</button>
     <p id="classificationFeedback" class="status-line"></p>
@@ -78,3 +77,5 @@
 </div>
 
 <script src="script.js"></script>
+</body>
+</html>
