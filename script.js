@@ -28,6 +28,7 @@ let keystrokes = [];
 let backspaces = 0;
 let typingStart = null;
 let typingEnd = null;
+let typingCompleted = false;
 
 let timerInterval = null;
 let timerStart = null;
@@ -67,6 +68,11 @@ function completeTask(id) {
 // YAZMA TESTİ
 // ====================
 const typingInput = document.getElementById("typingInput");
+const typingSentenceEl = document.getElementById("typingSentence");
+const checkTypingBtn = document.getElementById("checkTyping");
+const typingStatus = document.getElementById("typingStatus");
+
+typingSentenceEl.textContent = targetSentence;
 
 typingInput.addEventListener("keydown", e => {
   if (!typingStart) typingStart = Date.now();
@@ -79,11 +85,38 @@ typingInput.addEventListener("paste", e => {
   e.preventDefault();
 });
 
-typingInput.addEventListener("input", () => {
-  if (typingInput.value === targetSentence) {
-    typingEnd = Date.now();
-    completeTask("task-typing");
+function finalizeTypingTask() {
+  if (typingCompleted) return;
+  typingCompleted = true;
+  typingEnd = Date.now();
+  typingInput.disabled = true;
+  checkTypingBtn.disabled = true;
+  typingStatus.textContent = "Doğru! Görev tamamlandı.";
+  completeTask("task-typing");
+}
+
+function evaluateTypingInput(showFeedback = false) {
+  if (typingCompleted) return true;
+  const currentValue = typingInput.value.trim();
+  const matches = currentValue === targetSentence.trim();
+  if (matches) {
+    finalizeTypingTask();
+    return true;
   }
+  if (showFeedback) {
+    typingStatus.textContent = currentValue
+      ? "Cümle tamamen eşleşmiyor, lütfen kontrol edin."
+      : "Lütfen önce cümleyi yazın.";
+  }
+  return false;
+}
+
+typingInput.addEventListener("input", () => {
+  evaluateTypingInput();
+});
+
+checkTypingBtn.addEventListener("click", () => {
+  evaluateTypingInput(true);
 });
 
 // ====================
@@ -127,13 +160,17 @@ const reactionBtn = document.getElementById("reactionBtn");
 const reactionStatus = document.getElementById("reactionStatus");
 let reactionReady = false;
 let reactionStartTime = null;
+let reactionCompleted = false;
 
 reactionBtn.addEventListener("click", () => {
+  if (reactionCompleted) return;
   if (reactionReady) {
     const reactionTime = Date.now() - reactionStartTime;
     metrics.reaction = reactionTime;
-    reactionBtn.textContent = "Tekrar Başlat";
-    reactionStatus.textContent = `Reaksiyon süresi: ${reactionTime} ms. Tekrar denemek için butona basın.`;
+    reactionCompleted = true;
+    reactionBtn.disabled = true;
+    reactionBtn.textContent = "Tamamlandı";
+    reactionStatus.textContent = `Reaksiyon süresi: ${reactionTime} ms. Görev tamamlandı.`;
     reactionReady = false;
     completeTask("task-reaction");
     return;
@@ -166,6 +203,7 @@ let sliderChallengeTimeout = null;
 let sliderChallengeActive = false;
 let sliderPointerActive = false;
 let sliderDisablePending = false;
+let sliderAttempted = false;
 
 sliderTargetEl.textContent = sliderTarget;
 sliderValueEl.textContent = precisionSlider.value;
@@ -215,7 +253,9 @@ function resetSliderChallenge() {
   sliderChallengeTimeout = null;
   sliderChallengeActive = false;
   disableSliderSafely();
-  startSliderGameBtn.disabled = false;
+  if (!sliderAttempted) {
+    startSliderGameBtn.disabled = false;
+  }
   sliderCountdownEl.textContent = "Hazır mısın?";
   sliderFeedback.textContent = "";
 }
@@ -224,7 +264,6 @@ function finishSliderChallenge() {
   if (!sliderChallengeActive) return;
   sliderChallengeActive = false;
   disableSliderSafely();
-  startSliderGameBtn.disabled = false;
   clearInterval(sliderCountdownInterval);
   sliderCountdownEl.textContent = "Süre doldu!";
   const value = Number(precisionSlider.value);
@@ -232,14 +271,22 @@ function finishSliderChallenge() {
   metrics.slider.value = value;
   metrics.slider.diff = diff;
   sliderFeedback.textContent = `Süre sonunda değer ${value}. Hedefe uzaklık ${diff.toFixed(1)}.`;
+  startSliderGameBtn.textContent = "Deneme tamamlandı";
+  startSliderGameBtn.disabled = true;
   completeTask("task-slider");
 }
 
 startSliderGameBtn.addEventListener("click", () => {
+  if (sliderAttempted) {
+    sliderFeedback.textContent = "Bu görevi yalnızca bir kez yapabilirsiniz.";
+    return;
+  }
   resetSliderChallenge();
+  sliderAttempted = true;
   sliderChallengeActive = true;
   precisionSlider.disabled = false;
   startSliderGameBtn.disabled = true;
+  startSliderGameBtn.textContent = "Deneme devam ediyor...";
   let remaining = 2000;
   sliderCountdownEl.textContent = `${(remaining / 1000).toFixed(2)} saniye`;
   sliderCountdownInterval = setInterval(() => {
@@ -260,9 +307,12 @@ resetSliderChallenge();
 // ====================
 const quizInput = document.getElementById("quizAnswer");
 const quizStatus = document.getElementById("quizStatus");
+const submitQuizBtn = document.getElementById("submitQuiz");
 const QUIZ_RESULT = 12 + 7 + 5;
+let quizSubmitted = false;
 
-document.getElementById("submitQuiz").addEventListener("click", () => {
+submitQuizBtn.addEventListener("click", () => {
+  if (quizSubmitted) return;
   const value = Number(quizInput.value);
   if (Number.isNaN(value)) {
     quizStatus.textContent = "Lütfen sayısal bir sonuç yazın.";
@@ -272,6 +322,9 @@ document.getElementById("submitQuiz").addEventListener("click", () => {
     value,
     correct: value === QUIZ_RESULT
   };
+  quizSubmitted = true;
+  quizInput.disabled = true;
+  submitQuizBtn.disabled = true;
   quizStatus.textContent =
     value === QUIZ_RESULT
       ? "Doğru! Bu değer açıkça sizin girdiğiniz veridir."
@@ -422,56 +475,3 @@ Bilgi Sorusu (Kullanıcı girişi): ${
       type: "explicit",
       info: "Sürgü konumu kullanıcı olarak verdiğiniz bilinçli değerdir."
     },
-    {
-      id: "quiz",
-      label: "Bilgi sorusu yanıtı",
-      value: metrics.quizAnswer
-        ? `${metrics.quizAnswer.value} (${metrics.quizAnswer.correct ? "doğru" : "yanlış"})`
-        : "—",
-      type: "explicit",
-      info: "Bu sonuç tamamen sizin hesaplayıp yazdığınız veridir."
-    }
-  ];
-
-  renderClassification(classificationItems);
-  classificationSection.classList.remove("hidden");
-};
-
-evaluateClassificationBtn.addEventListener("click", () => {
-  if (!classificationItems.length) return;
-
-  let answeredAll = true;
-  const selections = {};
-
-  classificationItems.forEach(item => {
-    const choice = document.querySelector(`input[name="${item.id}"]:checked`);
-    selections[item.id] = choice;
-    if (!choice) {
-      answeredAll = false;
-    }
-  });
-
-  if (!answeredAll) {
-    classificationFeedback.textContent = "Lütfen her veri için bir seçim yapın.";
-    return;
-  }
-
-  let correctCount = 0;
-
-  classificationItems.forEach(item => {
-    const block = classificationList.querySelector(`[data-item-id="${item.id}"]`);
-    block.classList.remove("correct", "incorrect");
-    const explanation = block.querySelector(".explanation");
-    explanation?.classList.remove("hidden");
-    const choice = selections[item.id];
-
-    if (choice.value === item.type) {
-      block.classList.add("correct");
-      correctCount++;
-    } else {
-      block.classList.add("incorrect");
-    }
-  });
-
-  classificationFeedback.textContent = `Doğru sınıflandırma: ${correctCount}/${classificationItems.length}. Digital exhaust otomatik izlerdir; sonuç verileri ise görev performansını yansıtır.`;
-});
