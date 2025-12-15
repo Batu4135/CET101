@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Digital Exhaust Deneyi</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+  <header>
+    <h1>Digital Exhaust</h1>
+    <p class="subtitle">CET 101</p>
+    
+  </header>
+
+  <section class="task" id="task-typing">
+    <h2>1️⃣ Yazma Ritmi</h2>
+    <p>Aşağıdaki cümleyi <b>eksiksiz ve doğru</b> yazın:</p>
+    
+    <input type="text" id="typingInput" placeholder="Buraya yazın...">
+  </section>
+
+  <section class="task" id="task-attention">
+    <h2>2️⃣ Zamanlama Testi</h2>
+    <p>Kronometreyi <b>tam 10.00 saniyede</b> durdurun.</p>
+    <div class="timer" id="timer">0.00</div>
+    <div class="button-row">
+      <button id="startTimer">Başlat</button>
+      <button id="stopTimer">Durdur</button>
+    </div>
+  </section>
+
+  <section class="task" id="task-reaction">
+    <h2>3️⃣ Reaksiyon Testi</h2>
+    <p>Butona basarak denemeyi başlatın, "Şimdi tıkla!" mesajını görünce <b>hemen tıklayın</b>.</p>
+    <button id="reactionBtn">Denemeyi Başlat</button>
+    <p id="reactionStatus" class="status-line">Hazır olduğunuzda butona basın.</p>
+  </section>
+
+  <section class="task" id="task-slider">
+    <h2>4️⃣ Hassas Sürgü (2 sn)</h2>
+    <p>Sadece <b>2 saniyen</b> var! Sürgüyü <b id="sliderTarget">—</b> değerine (0-100) getir.</p>
+    <p class="status-line">Süre: <span id="sliderCountdown">Hazır mısın?</span></p>
+    <input type="range" id="precisionSlider" min="0" max="100" step="0.5" value="50" disabled>
+    <p class="status-line">Seçilen değer: <span id="sliderValue">50</span></p>
+    <button id="startSliderGame">Denemeyi Başlat</button>
+    <p id="sliderFeedback" class="status-line"></p>
+  </section>
+
+  <section class="task" id="task-quiz">
+    <h2>5️⃣ Bilgi Sorusu</h2>
+    <p>Bu sayıların toplamı kaç eder? <b>12 + 7 + 5</b></p>
+    <input type="number" id="quizAnswer" placeholder="Cevabınızı yazın" step="1">
+    <button id="submitQuiz">Cevabı Kaydet</button>
+    <p id="quizStatus" class="status-line"></p>
+  </section>
+
+  <button id="finishBtn" class="finish">📊 Analizi Göster</button>
+
+  <section id="result" class="hidden">
+    <h2>Veri Analizi</h2>
+    <pre id="output"></pre>
+  </section>
+
+  <section id="classification" class="hidden">
+    <h2>🧠 Digital Exhaust mı?</h2>
+    <p>Her veri için sence doğru kategori hangisi? Otomatik dijital iz mi yoksa açık görev sonucu mu?</p>
+    <div id="classificationList" class="classification-list"></div>
+    <button id="evaluateClassification" class="finish">Seçimi Gönder</button>
+    <p id="classificationFeedback" class="status-line"></p>
+  </section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
